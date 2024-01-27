@@ -7,7 +7,12 @@ The screenshot below shows the Accessibilty Insights for Windows tool reporting 
 
 ![The Accessibility Insights for Windows tool reporting that an edit field in a Win32 app has a UIA IsRequiredForForm property of true.](Win32_RequiredEditField/AIWinResults.png)
 
-1. Use KeyboardNavigation.TabNavigation="Once" so that a tab press moves into a group of RadioButtons, and the next tab press moves out of that group. Customers don;t want tab to key keyboard focus between RadioButtons in the same group.
-2. Use KeyboardNavigation.DirectionalNavigation="Cycle" so that an arrow key press does not take keyboard focus out of a RadioButton group.
-3. For some types of UI,  arrowing between RadioButtons in a group the RadioButton gaining focus is selected. You may choose not to do that, as it means the behavior is not the same as that by default for other WPF apps. But I added the code anyway for your consideration.
+# UPDATE
 
+I recently had reason to explore setting an accessible value on a custom Win32 control, so I've updated the sample app to demonstrate that. In this demo, a custom value is set on the Button in the About dialog. Typically there'd be no reason to take this action with a Button (unless perhaps the Button presented some custom visuals conveying additional important information), but the same steps would work with a custom control.
+
+The identifier for the property being set is Value_Value_Property_GUID, and that's the Value property from the UI Automation (UIA) Value pattern. The demo does not change the default read-only property from the Value pattern.
+
+The screenshot below shows the Accessibilty Insights for Windows tool reporting that the control supports the UIA Value pattern, and its Value property is the demo string: "This is a demo value."
+
+![The Accessibility Insights for Windows tool reporting that Win32 control has a UIA Value property of This is a demo value.](Win32_RequiredEditField/AIWinResults.png)
