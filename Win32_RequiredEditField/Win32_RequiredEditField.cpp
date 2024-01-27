@@ -167,8 +167,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 // Barker: Add the following. 
-// Run when the UI is created.
-void SetEditFieldRequiredState(HWND hDlg, BOOL newRequiredState)
+HRESULT PrepareForAccPropServicesUse()
 {
     HRESULT hr = S_OK;
 
@@ -181,6 +180,15 @@ void SetEditFieldRequiredState(HWND hDlg, BOOL newRequiredState)
             IID_PPV_ARGS(&_pAccPropServices));
     }
 
+    return hr;
+}
+
+// Run when the UI is created.
+void SetEditFieldRequiredState(HWND hDlg, BOOL newRequiredState)
+{
+    HRESULT hr = S_OK;
+
+    hr = PrepareForAccPropServicesUse();
     if (SUCCEEDED(hr))
     {
         VARIANT var;
@@ -197,8 +205,27 @@ void SetEditFieldRequiredState(HWND hDlg, BOOL newRequiredState)
     }
 }
 
+void SetAccessibleValueOnControl(HWND hDlg, LPCWSTR pszDemoValue)
+{
+    HRESULT hr = S_OK;
+
+    hr = PrepareForAccPropServicesUse();
+    if (SUCCEEDED(hr))
+    {
+        // Set a demo value on a control. Note that if this is done in a real app,
+        // care would be taken to verify that a useful default value on the control
+        // is not being overridden.
+        hr = _pAccPropServices->SetHwndPropStr(
+            GetDlgItem(hDlg, IDOK),
+            OBJID_CLIENT,
+            CHILDID_SELF,
+            Value_Value_Property_GUID,
+            pszDemoValue);
+    }
+}
+
 // Run when the UI is destroyed.
-void ClearEditFieldRequiredState(HWND hDlg)
+void ClearAccPropServices(HWND hDlg)
 {
     if (_pAccPropServices != nullptr)
     {
@@ -228,6 +255,9 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         // Barker: Say the edit field is required.
         SetEditFieldRequiredState(hDlg, TRUE);
 
+        // Barker: Purely to show how a custom control could set a specific accessible value...
+        SetAccessibleValueOnControl(hDlg, L"This is a demo value.");
+
         return (INT_PTR)TRUE;
     }
     case WM_COMMAND:
@@ -241,7 +271,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
 
         // Barker: Clear the custom property set on the edit field.
-        ClearEditFieldRequiredState(hDlg);
+        ClearAccPropServices(hDlg);
 
         break;
     }
