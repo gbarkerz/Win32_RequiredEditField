@@ -15,4 +15,4 @@ The identifier for the property being set is Value_Value_Property_GUID, and that
 
 The screenshot below shows the Accessibilty Insights for Windows tool reporting that the control supports the UIA Value pattern, and its Value property is the demo string: "This is a demo value."
 
-![The Accessibility Insights for Windows tool reporting that Win32 control has a UIA Value property of This is a demo value.](Win32_RequiredEditField/AIWinResults.png)
+![The Accessibility Insights for Windows tool reporting that Win32 control has a UIA Value property of This is a demo value.](Win32_RequiredEditField/AIWinResultsValue.png)
